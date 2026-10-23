@@ -42,6 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # lets NuGet trusted publishing verify this workflow; no stored API key
+      contents: write # lets the job create the GitHub release
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -60,3 +61,12 @@ jobs:
 
       - name: Publish to NuGet
         run: dotnet nuget push "artifacts/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh release create "${{ github.ref_name }}" artifacts/*.nupkg artifacts/*.snupkg
+          --repo "${{ github.repository }}"
+          --title "${{ github.ref_name }}"
+          --notes "Published to NuGet: https://www.nuget.org/packages/${{ github.event.repository.name }}. See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details."
