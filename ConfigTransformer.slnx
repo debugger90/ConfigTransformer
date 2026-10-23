@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ConfigTransformer/ConfigTransformer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ConfigTransformer.Tests/ConfigTransformer.Tests.csproj" />
+  </Folder>
+</Solution>
